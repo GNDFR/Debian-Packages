@@ -1,5 +1,7 @@
 sudo apt update
 sudo apt install -y xfce4 tigervnc-standalone-server npm
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+sudo apt install ./google-chrome-stable_current_amd64.deb
 vncpasswd
 vncserver :1
 vncserver -kill :1
@@ -7,8 +9,6 @@ echo '#!/bin/bash' > ~/.vnc/xstartup
 echo 'unset DBUS_SESSION_BUS_ADDRESS' >> ~/.vnc/xstartup
 echo 'startxfce4' >> ~/.vnc/xstartup
 chmod +x ~/.vnc/xstartup
-npm install -g localtunnel
+sudo npm install -g localtunnel
 vncserver :1
 lt --port 5901
-wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-sudo apt install ./google-chrome-stable_current_amd64.deb
