@@ -9,3 +9,4 @@ echo 'startxfce4' >> ~/.vnc/xstartup
 chmod +x ~/.vnc/xstartup
 vncserver :1
 sudo dpkg -i goo*.deb
+ssh -p 22 -R 18888:localhost:5901 free.pinggy.io
