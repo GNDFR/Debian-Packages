@@ -1,5 +1,5 @@
 sudo apt update
-sudo apt install -y xfce4 xfce4-goodies tigervncserver dbus-x11
+sudo apt install -y xfce4 tigervnc-standalone-server
 vncpasswd
 vncserver :1
 vncserver -kill :1
