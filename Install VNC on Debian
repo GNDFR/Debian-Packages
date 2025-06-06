@@ -2,7 +2,8 @@ sudo apt update
 sudo apt install xfce4 tigervnc-standalone-server
 vncserver :1
 vncserver -kill :1
-
+printf '#!/bin/sh\n\nunset SESSION_MANAGER\nunset DBUS_SESSION_BUS_ADDRESS\n\n# Try a simple xterm first to see if the session starts\nxterm &\n\n# Or try the full path to startxfce4 if the above works\n# /usr/bin/startxfce4 &\n' > ~/.vnc/xstartup
+chmod +x ~/.vnc/xstartup
 chmod +x ~/.vnc/xstartup
 vncserver :1
 sudo apt install git python3-pip
