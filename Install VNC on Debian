@@ -1,56 +1,75 @@
 #!/bin/bash
 
+# 패키지 업데이트 및 설치
 sudo apt update
-sudo apt install -y xfce4 tigervnc-standalone-server npm wget
+sudo apt install -y xfce4 tigervnc-standalone-server wget
 
+# Google Chrome 설치
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O google-chrome-stable_current_amd64.deb
 sudo apt install -y ./google-chrome-stable_current_amd64.deb
 rm google-chrome-stable_current_amd64.deb
 
+# VNC 서버 초기 설정
 vncserver
 vncserver -kill :1
 
+# VNC xstartup 파일 설정
 mkdir -p ~/.vnc
 echo '#!/bin/bash' > ~/.vnc/xstartup
 echo 'unset DBUS_SESSION_BUS_ADDRESS' >> ~/.vnc/xstartup
 echo 'startxfce4' >> ~/.vnc/xstartup
 chmod +x ~/.vnc/xstartup
 
-sudo npm install -g localtunnel
+# ngrok 설치 및 인증
+# ngrok 다운로드
+curl -sSL https://ngrok-agent.s3.amazonaws.com/ngrok.asc \
+  | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null \
+  && echo "deb https://ngrok-agent.s3.amazonaws.com buster main" \
+  | sudo tee /etc/apt/sources.list.d/ngrok.list \
+  && sudo apt update \
+  && sudo apt install ngrok
 
+# ngrok 인증 토큰 설정 (!!!YOUR_NGROK_AUTH_TOKEN을 본인의 토큰으로 교체하세요!!!)
+ngrok config add-authtoken 2xc8ZeaaRj3cgvqgsB6khtjlNQW_4GFDFxFxNw4m5sAHXn8BJ
+
+# VNC 서버 및 ngrok 실행
 nohup vncserver :1 > vncserver.log 2>&1 &
 
-nohup lt --port 5901 > localtunnel.log 2>&1 &
+# ngrok 실행 (VNC 포트 5901 연결)
+nohup ngrok tcp 5901 > ngrok.log 2>&1 &
 
-# LocalTunnel URL 기다리기 + 프로세스 체크
-sleep 2
-LT_PID=$(pgrep -f "lt --port 5901")
+# ngrok 프로세스 체크
+sleep 5 # ngrok 시작 대기
+NGROK_PID=$(pgrep -f "ngrok tcp 5901")
 
-if [ -z "$LT_PID" ]; then
+if [ -z "$NGROK_PID" ]; then
     echo "--------------------------------------------------------"
-    echo "❌ LocalTunnel 프로세스가 실행되지 않았습니다."
-    echo "localtunnel.log 파일을 확인해보세요."
+    echo "❌ ngrok 프로세스가 실행되지 않았습니다."
+    echo "ngrok.log 파일을 확인해보세요."
     echo "--------------------------------------------------------"
     exit 1
 fi
 
-# 최대 30초까지 URL 대기
+# ngrok URL 가져오기 (최대 30초 대기)
 for i in {1..30}; do
-    LOCALTUNNEL_URL=$(grep "your url is:" localtunnel.log | tail -1 | awk '{print $NF}')
-    [ -n "$LOCALTUNNEL_URL" ] && break
+    NGROK_URL=$(grep -o 'tcp://[^ ]*' ngrok.log | tail -1)
+    [ -n "$NGROK_URL" ] && break
     sleep 1
 done
 
-if [ -n "$LOCALTUNNEL_URL" ]; then
+if [ -n "$NGROK_URL" ]; then
     echo "--------------------------------------------------------"
     echo "🎉 설정이 완료되었습니다! 🎉"
-    echo "클라이언트 컴퓨터에서 웹 브라우저를 열고 다음 URL로 접속하세요:"
-    echo "➡️ ${LOCALTUNNEL_URL/\.loca\.lt/\.loca\.lt\/?host=localhost\&port=5901}"
+    echo "클라이언트 컴퓨터에서 VNC 뷰어를 열고 다음 주소로 접속하세요:"
+    echo "➡️ ${NGROK_URL}"
+    echo "예시: ${NGROK_URL/tcp:\/\//}"
     echo "접속 후 설정했던 VNC 비밀번호를 입력하면 됩니다."
+    echo ""
+    echo "⚠️ 참고: ngrok 무료 플랜은 세션 지속 시간이 제한될 수 있습니다."
     echo "--------------------------------------------------------"
 else
     echo "--------------------------------------------------------"
-    echo "⚠️ LocalTunnel URL을 가져오는 데 실패했습니다."
-    echo "localtunnel.log를 수동으로 확인해 주세요: tail -f localtunnel.log"
+    echo "⚠️ ngrok URL을 가져오는 데 실패했습니다."
+    echo "ngrok.log를 수동으로 확인해 주세요: tail -f ngrok.log"
     echo "--------------------------------------------------------"
 fi
