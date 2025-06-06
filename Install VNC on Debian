@@ -1,24 +1,97 @@
-sudo apt update
-sudo apt install xfce4 tigervnc-standalone-server
-vncserver :1
+#!/bin/bash
+
+echo "=========================================="
+echo "      VNC + noVNC + ngrok 설정 스크립트      "
+echo "=========================================="
+
+# 1. 기존 프로세스 정리 (안전한 재시작을 위해)
+echo "▶ 기존 VNC, websockify, Python HTTP 서버, ngrok 프로세스 종료..."
+killall vncserver &>/dev/null
+killall websockify &>/dev/null
+killall python3 &>/dev/null
+killall ngrok &>/dev/null
+echo "정리 완료."
+echo ""
+
+# 2. 패키지 업데이트 및 필수 패키지 설치
+echo "▶ 시스템 패키지 업데이트 및 필수 패키지 설치..."
+sudo apt update -y
+sudo apt install -y xfce4 tigervnc-standalone-server git python3-pip xterm
+# xterm은 xstartup 테스트 및 기본 터미널용으로 설치합니다.
+echo "패키지 설치 완료."
+echo ""
+
+# 3. VNC 서버 초기 설정 및 xstartup 파일 구성
+echo "▶ VNC 서버 초기 설정 (비밀번호 설정 필요)..."
+vncserver :1 # 처음 실행 시 VNC 비밀번호를 설정해야 합니다.
+
+echo "▶ VNC 서버 종료 (xstartup 설정 준비)..."
 vncserver -kill :1
-printf '#!/bin/sh\n\nunset SESSION_MANAGER\nunset DBUS_SESSION_BUS_ADDRESS\n\n# Try a simple xterm first to see if the session starts\nxterm &\n\n# Or try the full path to startxfce4 if the above works\n# /usr/bin/startxfce4 &\n' > ~/.vnc/xstartup
+
+echo "▶ ~/.vnc/xstartup 파일 구성 (XFCE4 시작 설정)..."
+# startxfce4의 전체 경로를 사용하고 'exec'를 사용하여 세션이 안정적으로 시작되도록 합니다.
+printf '#!/bin/sh\n\nunset SESSION_MANAGER\nunset DBUS_SESSION_BUS_ADDRESS\n\nexec /usr/bin/startxfce4\n' > ~/.vnc/xstartup
 chmod +x ~/.vnc/xstartup
-chmod +x ~/.vnc/xstartup
+echo "xstartup 파일 설정 완료."
+echo ""
+
+# 4. VNC 서버 재시작
+echo "▶ VNC 서버 재시작..."
 vncserver :1
-sudo apt install git python3-pip
-git clone https://github.com/novnc/noVNC.git
+echo "VNC 서버가 포트 5901에서 실행 중입니다."
+echo "로그 파일 위치: ~/.vnc/cs-*-default:1.log (정확한 이름은 콘솔 확인)"
+echo "VNC 세션 시작 성공 여부를 위해 로그 파일을 확인하세요."
+echo ""
+
+# 5. noVNC 및 websockify 설치 및 실행
+echo "▶ noVNC 클론 및 websockify 설치..."
+if [ -d "noVNC" ]; then
+    echo "noVNC 디렉토리가 이미 존재합니다. 다시 클론하지 않습니다."
+else
+    git clone https://github.com/novnc/noVNC.git
+fi
 sudo pip install websockify
+echo "noVNC 및 websockify 설치 완료."
+echo ""
+
+echo "▶ websockify 백그라운드 실행 (포트 6080 -> localhost:5901)..."
 nohup websockify 6080 localhost:5901 > websockify.log 2>&1 &
 echo "websockify가 백그라운드에서 실행 중입니다. 로그 파일: websockify.log"
+echo ""
+
+echo "▶ noVNC 웹 서버 백그라운드 실행 (포트 60800)..."
 cd noVNC
 nohup python3 -m http.server 60800 > http_server.log 2>&1 &
 echo "noVNC 웹 서버가 백그라운드에서 실행 중입니다. 포트: 60800, 로그 파일: http_server.log"
+echo ""
+
+# 6. ngrok 설치 및 실행
+echo "▶ ngrok 설치..."
+# 기존 ngrok 설치 오류 방지 및 재시도
 curl -sSL https://ngrok-agent.s3.amazonaws.com/ngrok.asc \
-  | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null \
-  && echo "deb https://ngrok-agent.s3.amazonaws.com buster main" \
-  | sudo tee /etc/apt/sources.list.d/ngrok.list \
-  && sudo apt update
-  && sudo apt install ngrok
-ngrok config add-authtoken 2xc8ZeaaRj3cgvqgsB6khtjlNQW_4GFDFxFxNw4m5sAHXn8BJ
-ngrok http --url=noble-happy-ray.ngrok-free.app 60800
+  | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null \
+  && echo "deb https://ngrok-agent.s3.amazonaws.com buster main" \
+  | sudo tee /etc/apt/sources.list.d/ngrok.list \
+  && sudo apt update -y \
+  && sudo apt install -y ngrok
+echo "ngrok 설치 완료."
+echo ""
+
+# ngrok authtoken 설정 (반드시 본인의 토큰으로 변경하세요!)
+echo "▶ ngrok Authtoken 설정 (본인의 토큰으로 변경 필수!)"
+# ngrok config add-authtoken YOUR_AUTHTOKEN_HERE
+ngrok config add-authtoken 2xc8ZeaaRj3cgvqgsB6khtjlNQW_4GFDFxFxNw4m5sAHXn8BJ # <--- 이 부분을 본인의 토큰으로 변경하세요!
+echo "ngrok Authtoken 설정 완료."
+echo ""
+
+echo "▶ ngrok 터널링 시작 (noVNC 웹 서버 60800 포트 공개)..."
+# --url=noble-happy-ray.ngrok-free.app 부분은 ngrok 유료 플랜에서만 사용 가능합니다.
+# 무료 플랜이라면 이 부분을 제거하고 'ngrok http 60800'으로 실행하여 할당되는 랜덤 URL을 사용하세요.
+ngrok http 60800
+# ngrok http --url=noble-happy-ray.ngrok-free.app 60800 # 유료 플랜에서 고정 도메인 사용 시
+
+echo "=========================================="
+echo "          설정 스크립트 완료!             "
+echo "=========================================="
+echo "이제 ngrok이 제공해준 url로 접속하면,"
+echo "noVNC 웹 페이지에 접근할 수 있습니다."
