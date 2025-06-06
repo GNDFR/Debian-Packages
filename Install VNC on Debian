@@ -1,13 +1,56 @@
+#!/bin/bash
+
 sudo apt update
-wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-sudo apt install -y xfce4 tigervnc-standalone-server npm ./google-chrome-stable_current_amd64.deb
-vncpasswd
-vncserver :1
+sudo apt install -y xfce4 tigervnc-standalone-server npm wget
+
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O google-chrome-stable_current_amd64.deb
+sudo apt install -y ./google-chrome-stable_current_amd64.deb
+rm google-chrome-stable_current_amd64.deb
+
+vncserver
 vncserver -kill :1
+
+mkdir -p ~/.vnc
 echo '#!/bin/bash' > ~/.vnc/xstartup
 echo 'unset DBUS_SESSION_BUS_ADDRESS' >> ~/.vnc/xstartup
 echo 'startxfce4' >> ~/.vnc/xstartup
 chmod +x ~/.vnc/xstartup
+
 sudo npm install -g localtunnel
-vncserver :1
-lt --port 5901
+
+nohup vncserver :1 > vncserver.log 2>&1 &
+
+nohup lt --port 5901 > localtunnel.log 2>&1 &
+
+# LocalTunnel URL 기다리기 + 프로세스 체크
+sleep 2
+LT_PID=$(pgrep -f "lt --port 5901")
+
+if [ -z "$LT_PID" ]; then
+    echo "--------------------------------------------------------"
+    echo "❌ LocalTunnel 프로세스가 실행되지 않았습니다."
+    echo "localtunnel.log 파일을 확인해보세요."
+    echo "--------------------------------------------------------"
+    exit 1
+fi
+
+# 최대 30초까지 URL 대기
+for i in {1..30}; do
+    LOCALTUNNEL_URL=$(grep "your url is:" localtunnel.log | tail -1 | awk '{print $NF}')
+    [ -n "$LOCALTUNNEL_URL" ] && break
+    sleep 1
+done
+
+if [ -n "$LOCALTUNNEL_URL" ]; then
+    echo "--------------------------------------------------------"
+    echo "🎉 설정이 완료되었습니다! 🎉"
+    echo "클라이언트 컴퓨터에서 웹 브라우저를 열고 다음 URL로 접속하세요:"
+    echo "➡️ ${LOCALTUNNEL_URL/\.loca\.lt/\.loca\.lt\/?host=localhost\&port=5901}"
+    echo "접속 후 설정했던 VNC 비밀번호를 입력하면 됩니다."
+    echo "--------------------------------------------------------"
+else
+    echo "--------------------------------------------------------"
+    echo "⚠️ LocalTunnel URL을 가져오는 데 실패했습니다."
+    echo "localtunnel.log를 수동으로 확인해 주세요: tail -f localtunnel.log"
+    echo "--------------------------------------------------------"
+fi
