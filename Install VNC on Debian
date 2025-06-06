@@ -10,7 +10,7 @@ sudo apt install -y ./google-chrome-stable_current_amd64.deb
 rm google-chrome-stable_current_amd64.deb
 
 # VNC 서버 초기 설정
-vncserver
+vncserver :1
 vncserver -kill :1
 
 # VNC xstartup 파일 설정
