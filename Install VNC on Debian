@@ -30,8 +30,14 @@ echo "▶ VNC 서버 종료 (xstartup 설정 준비)..."
 vncserver -kill :1
 
 echo "▶ ~/.vnc/xstartup 파일 구성 (XFCE4 시작 설정)..."
-# startxfce4의 전체 경로를 사용하고 'exec'를 사용하여 세션이 안정적으로 시작되도록 합니다.
-printf '#!/bin/sh\n\nunset SESSION_MANAGER\nunset DBUS_SESSION_BUS_ADDRESS\n\nexec /usr/bin/startxfce4\n' > ~/.vnc/xstartup
+printf '#!/bin/sh\n\n' > ~/.vnc/xstartup
+printf 'export XDG_RUNTIME_DIR="${HOME}/.xdg_runtime_dir"\n' >> ~/.vnc/xstartup
+printf 'mkdir -p "${XDG_RUNTIME_DIR}"\n' >> ~/.vnc/xstartup
+printf 'chmod 0700 "${XDG_RUNTIME_DIR}"\n' >> ~/.vnc/xstartup
+printf 'unset SESSION_MANAGER\nunset DBUS_SESSION_BUS_ADDRESS\n\n' >> ~/.vnc/xstartup
+printf '[ -x /etc/vnc/xstartup ] && exec /etc/vnc/xstartup\n' >> ~/.vnc/xstartup # 시스템 xstartup 실행 (권장)
+printf '[ -r $HOME/.Xresources ] && xrdb $HOME/.Xresources\n' >> ~/.vnc/xstartup
+printf 'startxfce4 &\n' >> ~/.vnc/xstartup # XFCE4 시작
 chmod +x ~/.vnc/xstartup
 echo "xstartup 파일 설정 완료."
 echo ""
