@@ -31,13 +31,16 @@ vncserver -kill :1
 
 echo "▶ ~/.vnc/xstartup 파일 구성 (XFCE4 시작 설정)..."
 printf '#!/bin/sh\n\n' > ~/.vnc/xstartup
+printf 'unset SESSION_MANAGER\n' >> ~/.vnc/xstartup
+printf 'unset DBUS_SESSION_BUS_ADDRESS\n' >> ~/.vnc/xstartup
 printf 'export XDG_RUNTIME_DIR="${HOME}/.xdg_runtime_dir"\n' >> ~/.vnc/xstartup
 printf 'mkdir -p "${XDG_RUNTIME_DIR}"\n' >> ~/.vnc/xstartup
 printf 'chmod 0700 "${XDG_RUNTIME_DIR}"\n' >> ~/.vnc/xstartup
-printf 'unset SESSION_MANAGER\nunset DBUS_SESSION_BUS_ADDRESS\n\n' >> ~/.vnc/xstartup
-printf '[ -x /etc/vnc/xstartup ] && exec /etc/vnc/xstartup\n' >> ~/.vnc/xstartup # 시스템 xstartup 실행 (권장)
+printf 'start-pulseaudio-x11 &\n' >> ~/.vnc/xstartup # 선택 사항: Pulseaudio 시작 (오디오 필요시)
+printf '[ -x /etc/vnc/xstartup ] && exec /etc/vnc/xstartup\n' >> ~/.vnc/xstartup # 시스템 xstartup 실행
 printf '[ -r $HOME/.Xresources ] && xrdb $HOME/.Xresources\n' >> ~/.vnc/xstartup
-printf 'startxfce4 &\n' >> ~/.vnc/xstartup # XFCE4 시작
+printf 'vncconfig -iconic &\n' >> ~/.vnc/xstartup # VNC 설정 도구 (백그라운드)
+printf '/usr/bin/startxfce4 &\n' >> ~/.vnc/xstartup # XFCE4 시작 (정확한 경로)
 chmod +x ~/.vnc/xstartup
 echo "xstartup 파일 설정 완료."
 echo ""
