@@ -16,7 +16,7 @@ echo ""
 # 2. 패키지 업데이트 및 필수 패키지 설치
 echo "▶ 시스템 패키지 업데이트 및 필수 패키지 설치..."
 sudo apt update -y
-sudo apt install -y xfce4 tigervnc-standalone-server git python3-pip xterm
+sudo apt install -y xfce4 tigervnc-standalone-server git python3-pip xterm dbus-x11
 # xterm은 xstartup 테스트 및 기본 터미널용으로 설치합니다.
 echo "패키지 설치 완료."
 echo ""
