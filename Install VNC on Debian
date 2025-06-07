@@ -23,6 +23,7 @@ echo ""
 
 # 3. VNC 서버 초기 설정 및 xstartup 파일 구성
 echo "▶ VNC 서버 초기 설정 (비밀번호 설정 필요)..."
+vncpasswd
 vncserver :1 # 처음 실행 시 VNC 비밀번호를 설정해야 합니다.
 
 echo "▶ VNC 서버 종료 (xstartup 설정 준비)..."
