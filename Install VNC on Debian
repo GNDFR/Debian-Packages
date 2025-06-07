@@ -89,7 +89,7 @@ echo "▶ ngrok 터널링 시작 (noVNC 웹 서버 60800 포트 공개)..."
 # --url=noble-happy-ray.ngrok-free.app 부분은 ngrok 유료 플랜에서만 사용 가능합니다.
 # 무료 플랜이라면 이 부분을 제거하고 'ngrok http 60800'으로 실행하여 할당되는 랜덤 URL을 사용하세요.
 ngrok http 60800
-# ngrok http --url=noble-happy-ray.ngrok-free.app 60800 # 유료 플랜에서 고정 도메인 사용 시
+# ngrok http 60800 # 유료 플랜에서 고정 도메인 사용 시
 
 echo "=========================================="
 echo "          설정 스크립트 완료!             "
