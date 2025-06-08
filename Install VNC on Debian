@@ -3,3 +3,8 @@ sudo apt install xfce4 tigervnc-standalone-server dbus-x11
 vncpasswd
 vncserver :1
 vncserver -kill :1
+echo "#!/bin/sh" > ~/.vnc/xstartup
+echo "unset SESSION_MANAGER" >> ~/.vnc/xstartup
+echo "unset DBUS_SESSION_BUS_ADDRESS" >> ~/.vnc/xstartup
+echo "exec startxfce4" >> ~/.vnc/xstartup
+chmod +x ~/.vnc/xstartup
