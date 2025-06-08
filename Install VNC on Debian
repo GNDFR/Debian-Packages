@@ -113,7 +113,8 @@ echo ""
 # ngrok authtoken 설정 (반드시 본인의 토큰으로 변경하세요!)
 echo "▶ ngrok Authtoken 설정 (본인의 토큰으로 변경 필수!)"
 # ngrok config add-authtoken YOUR_AUTHTOKEN_HERE
-ngrok config add-authtoken 2xc8ZeaaRj3cgvqgsB6khtjlNQW_4GFDFxFxNw4m5sAHXn8BJ # <--- 이 부분을 본인의 토큰으로 변경하세요!
+read -p "Ngrok Authtoken 입력: " NGROK_TOKEN
+ngrok config add-authtoken $NGROK_TOKEN
 echo "ngrok Authtoken 설정 완료."
 echo ""
 
