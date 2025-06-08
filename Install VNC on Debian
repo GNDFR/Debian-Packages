@@ -37,15 +37,12 @@ echo "▶ VNC 서버 시작 (xstartup 설정 준비)..."
 # 이미 설정했다면 다시 묻지 않을 수 있습니다.
 vncserver :1
 
-echo "▶ VNC 서버 종료 (xstartup 설정 적용을 위해)..."
-vncserver -kill :1
-
-echo "▶ ~/.vnc/xstartup 파일 구성 (XFCE4 시작 설정 - D-Bus 강화 버전)..."
+echo "▶ ~/.vnc/xstartup 파일 구성 (XFCE4 시작 설정 - dbus-launch 직접 실행)..."
 printf '#!/bin/sh\n\n' > ~/.vnc/xstartup
 
 # 필수 환경 변수 설정
-printf 'export XDG_RUNTIME_DIR="${HOME}/.xdg_runtime_dir"\n' >> ~/.vnc/xstartup
-printf 'mkdir -p "${XDG_RUNTIME_DIR}"\n' >> ~/.vnc/xstartup
+printf 'export XDG_RUNTIME_DIR="<span class="math-inline">\{HOME\}/\.xdg\_runtime\_dir"\\n' \>\> \~/\.vnc/xstartup
+printf 'mkdir \-p "</span>{XDG_RUNTIME_DIR}"\n' >> ~/.vnc/xstartup
 printf 'chmod 0700 "${XDG_RUNTIME_DIR}"\n' >> ~/.vnc/xstartup
 
 printf 'unset SESSION_MANAGER\n' >> ~/.vnc/xstartup
@@ -55,21 +52,17 @@ printf 'unset DBUS_SESSION_BUS_ADDRESS\n' >> ~/.vnc/xstartup
 printf 'export DISPLAY=:1\n' >> ~/.vnc/xstartup
 printf 'export XAUTHORITY=$HOME/.Xauthority\n' >> ~/.vnc/xstartup
 
-# D-Bus 세션 시작 (가장 중요!)
-# dbus-launch를 사용하여 D-Bus 세션을 명시적으로 시작하고 XFCE4를 그 안에 실행
-printf 'if which dbus-launch >/dev/null && test -z "$DBUS_SESSION_BUS_ADDRESS"; then\n' >> ~/.vnc/xstartup
-printf '  eval `dbus-launch --sh-syntax --exit-with-session`\n' >> ~/.vnc/xstartup
-printf 'fi\n' >> ~/.vnc/xstartup
+# D-Bus 세션을 시작하고 XFCE4를 그 안에 실행 (핵심 변경 사항)
+printf 'exec dbus-launch --exit-with-session startxfce4\n' >> ~/.vnc/xstartup
 
-# 시작 프로그램들
-printf '[ -x /etc/vnc/xstartup ] && exec /etc/vnc/xstartup\n' >> ~/.vnc/xstartup # 시스템 xstartup 실행 (권장)
-printf '[ -r $HOME/.Xresources ] && xrdb $HOME/.Xresources\n' >> ~/.vnc/xstartup
-printf 'vncconfig -iconic &\n' >> ~/.vnc/xstartup # VNC 설정 도구 (백그라운드)
-# xfce4-session은 위에서 dbus-launch eval에 의해 실행될 것이므로,
-# exec startxfce4 대신 직접적인 세션 시작 명령을 사용할 수도 있지만,
-# dbus-launch 안에 startxfce4를 넣는 것이 더 안정적일 수 있습니다.
+# 나머지 시작 프로그램들은 필요 없을 수 있으므로 일단 제외합니다.
+# printf '[ -x /etc/vnc/xstartup ] && exec /etc/vnc/xstartup\n' >> ~/.vnc/xstartup # 시스템 xstartup 실행 (권장)
+# printf '[ -r $HOME/.Xresources ] && xrdb $HOME/.Xresources\n' >> ~/.vnc/xstartup
+# printf 'vncconfig -iconic &\n' >> ~/.vnc/xstartup # VNC 설정 도구 (백그라운드)
 
-printf 'exec startxfce4\n' >> ~/.vnc/xstartup # XFCE4 시작 (exec 사용)
+chmod +x ~/.vnc/xstartup
+echo "xstartup 파일 설정 완료."
+echo ""
 
 chmod +x ~/.vnc/xstartup
 echo "xstartup 파일 설정 완료."
