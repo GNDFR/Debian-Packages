@@ -8,3 +8,5 @@ echo "unset SESSION_MANAGER" >> ~/.vnc/xstartup
 echo "unset DBUS_SESSION_BUS_ADDRESS" >> ~/.vnc/xstartup
 echo "exec startxfce4" >> ~/.vnc/xstartup
 chmod +x ~/.vnc/xstartup
+vncserver :1
+ssh -R 5901:localhost:5901 serveo.net
