@@ -1,10 +1,10 @@
-sudo apt update > /dev/null 2>&1
-sudo apt install -y xfce4 tigervnc-standalone-server dbus-x11 websockify > /dev/null 2>&1
-wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -q --show-progress
-sudo apt install -y ./google-chrome-stable_current_amd64.deb > /dev/null 2>&1
+sudo apt update
+sudo apt install -y xfce4 tigervnc-standalone-server dbus-x11 websockify
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+sudo apt install -y ./google-chrome-stable_current_amd64.deb
 rm google-chrome-stable_current_amd64.deb
 vncpasswd
-vncserver -kill :1 > /dev/null 2>&1
+vncserver -kill :1
 mkdir -p ~/.vnc
 echo "#!/bin/sh" > ~/.vnc/xstartup
 echo "unset SESSION_MANAGER" >> ~/.vnc/xstartup
@@ -14,6 +14,6 @@ chmod +x ~/.vnc/xstartup
 vncserver :1
 NOVNC_DIR="$HOME/noVNC"
 if [ ! -d "$NOVNC_DIR" ]; then
-    git clone https://github.com/novnc/noVNC.git "$NOVNC_DIR" > /dev/null 2>&1
+    git clone https://github.com/novnc/noVNC.git "$NOVNC_DIR"
 fi
-nohup websockify --web "$NOVNC_DIR" 6080 localhost:5901 > "$HOME/websockify.log" 2>&1 &
+nohup websockify --web "$NOVNC_DIR" 6080 localhost:5901 > "$HOME/websockify.log"
