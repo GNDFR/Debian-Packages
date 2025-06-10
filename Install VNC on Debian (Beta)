@@ -17,3 +17,4 @@ if [ ! -d "$NOVNC_DIR" ]; then
     git clone https://github.com/novnc/noVNC.git "$NOVNC_DIR"
 fi
 nohup websockify --web "$NOVNC_DIR" 6080 localhost:5901 > "$HOME/websockify.log"
+echo "noVNC web access address: http://$(hostname -I | awk '{print $1}'):6080/vnc.html"
