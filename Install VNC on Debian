@@ -6,3 +6,4 @@ rm google-chrome-stable_current_amd64.deb
 wget https://dl.google.com/linux/direct/chrome-remote-desktop_current_amd64.deb
 sudo apt install ./chrome-remote-desktop_current_amd64.deb
 rm chrome-remote-desktop_current_amd64.deb
+echo "exec /usr/bin/startlxqt" > ~/.chrome-remote-desktop-session
