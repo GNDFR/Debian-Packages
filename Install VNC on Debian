@@ -2,6 +2,7 @@ deb [signed-by=/usr/share/keyrings/firefox-archive-keyring.gpg] https://packages
 wget -q -O - https://packages.mozilla.org/apt/mozilla.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/firefox-archive-keyring.gpg > /dev/null
 sudo apt update
 sudo apt install -y lxqt tigervnc-standalone-server dbus-x11 firefox openbox
+vncpasswd
 vncserver :1
 vncserver -kill :1
 cat > ~/.vnc/xstartup <<'EOF'
@@ -13,4 +14,4 @@ export DISPLAY=:1
 exec startlxqt
 EOF
 chmod +x ~/.vnc/xstartup
-sudo mkdir -p --mode=0755 /usr/share/keyrings
+vncserver :1
