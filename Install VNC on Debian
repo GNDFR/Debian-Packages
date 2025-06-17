@@ -13,5 +13,4 @@ export DISPLAY=:1
 exec startlxqt
 EOF
 chmod +x ~/.vnc/xstartup
-chmod +x ~/.vnc/xstartup
 sudo mkdir -p --mode=0755 /usr/share/keyrings
