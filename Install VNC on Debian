@@ -1,7 +1,7 @@
 deb [signed-by=/usr/share/keyrings/firefox-archive-keyring.gpg] https://packages.mozilla.org/apt mozilla main
 wget -q -O - https://packages.mozilla.org/apt/mozilla.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/firefox-archive-keyring.gpg > /dev/null
 sudo apt update
-sudo apt install -y lxqt tigervnc-standalone-server dbus-x11 firefox
+sudo apt install -y lxqt tigervnc-standalone-server dbus-x11 firefox openbox
 vncserver :1
 vncserver -kill :1
 echo '#!/bin/sh' > ~/.vnc/xstartup && echo '' >> ~/.vnc/xstartup && echo 'unset SESSION_MANAGER' >> ~/.vnc/xstartup && echo 'unset DBUS_SESSION_BUS_ADDRESS' >> ~/.vnc/xstartup && echo 'startlxqt &' >> ~/.vnc/xstartup && chmod +x ~/.vnc/xstartup
