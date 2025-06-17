@@ -2,7 +2,6 @@ deb [signed-by=/usr/share/keyrings/firefox-archive-keyring.gpg] https://packages
 wget -q -O - https://packages.mozilla.org/apt/mozilla.gpg | gpg --dearmor | sudo tee /usr/share/keyrings/firefox-archive-keyring.gpg > /dev/null
 sudo apt update
 sudo apt install -y lxqt tigervnc-standalone-server dbus-x11 firefox openbox
-# VNC 서버 실행 후 종료하여 초기화
 vncserver :1
 vncserver -kill :1
 cat > ~/.vnc/xstartup <<'EOF'
