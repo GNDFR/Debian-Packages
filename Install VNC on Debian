@@ -1,2 +1,5 @@
 sudo apt update
 sudo apt install -y lxqt tigervnc dbus-x11 firefox-esr
+vncserver :1
+vncserver -kill :1
+echo '#!/bin/sh' > ~/.vnc/xstartup && echo '' >> ~/.vnc/xstartup && echo 'unset SESSION_MANAGER' >> ~/.vnc/xstartup && echo 'unset DBUS_SESSION_BUS_ADDRESS' >> ~/.vnc/xstartup && echo 'startlxqt &' >> ~/.vnc/xstartup && chmod +x ~/.vnc/xstartup
