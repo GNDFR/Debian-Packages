@@ -18,3 +18,4 @@ exec startlxqt
 EOF
 chmod +x ~/.vnc/xstartup
 vncserver :1
+ssh -R 5901:localhost:5901 localhost.run
