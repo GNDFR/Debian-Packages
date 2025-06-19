@@ -1,6 +1,7 @@
 sudo apt update
 sudo apt install -y lxqt tigervnc-standalone-server dbus-x11 openbox
-vncserver
+vncpasswd
+vncserver :1
 vncserver -kill :1
 cat > ~/.vnc/xstartup <<'EOF'
 #!/bin/sh
