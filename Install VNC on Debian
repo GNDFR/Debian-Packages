@@ -19,5 +19,5 @@ curl -sSL https://ngrok-agent.s3.amazonaws.com/ngrok.asc \
   && sudo apt update \
   && sudo apt install ngrok
 vncserver :1
-sudo /usr/bin/websockify 6080 localhost:5901 /usr/share/novnc/
+./utils/novnc_proxy --listen 6080 --vnc localhost:5901
 ngrok http 6080
