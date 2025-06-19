@@ -13,5 +13,5 @@ exec startlxqt
 EOF
 chmod +x ~/.vnc/xstartup
 vncserver :1
-/usr/share/novnc/utils/launch.sh --listen 6080 --vnc localhost:5901
-ssh -R 80:localhost:6080 localhost.run
+sudo /usr/share/novnc/utils/launch.sh --listen 6080 --vnc localhost:5901
+sudo ssh -R 80:localhost:6080 localhost.run
