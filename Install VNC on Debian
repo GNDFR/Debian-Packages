@@ -1,7 +1,6 @@
 sudo apt update
-sudo apt install -y lxqt tigervnc-standalone-server dbus-x11 firefox openbox 
-vncpasswd
-vncserver :1
+sudo apt install -y lxqt tigervnc-standalone-server dbus-x11 openbox
+vncserver
 vncserver -kill :1
 cat > ~/.vnc/xstartup <<'EOF'
 #!/bin/sh
@@ -13,4 +12,6 @@ exec startlxqt
 EOF
 chmod +x ~/.vnc/xstartup
 vncserver :1
-ssh -R 5901:localhost:5901 localhost.run
+sudo apt install novnc websockify -y
+/usr/share/novnc/utils/launch.sh --listen 6080 --vnc localhost:5901
+ssh -R 80:localhost:6080 localhost.run
