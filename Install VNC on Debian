@@ -20,5 +20,6 @@ startlxqt &
 EOF
 chmod +x ~/.vnc/xstartup
 vncserver :1
+cd ~/noVNC/utils/
 sudo ./noVNC/utils/novnc_proxy --listen 6080 --vnc localhost:5901
 ngrok http --host-header=rewrite 6080
