@@ -15,5 +15,5 @@ EOF
 chmod +x ~/.vnc/xstartup
 vncserver :1
 cd ~/noVNC/utils/
-sudo ./novnc_proxy --listen 6080 --vnc localhost:5901
+sudo ./novnc_proxy --listen 6080 --vnc localhost:5901 &
 ssh -R 80:localhost:6080
