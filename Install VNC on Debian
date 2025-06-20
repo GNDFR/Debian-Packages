@@ -16,4 +16,4 @@ chmod +x ~/.vnc/xstartup
 vncserver :1
 cd ~/noVNC/utils/
 sudo ./novnc_proxy --listen 6080 --vnc localhost:5901
-curl -O https://pagekite.net/pk/pagekite.py && python3 pagekite.py 80 gndfr.pagekite.me
+ssh -R 80:localhost:6080
