@@ -1,5 +1,5 @@
 sudo apt update
-sudo apt install -y lxqt tigervnc-standalone-server dbus-x11 openbox nodejs
+sudo apt install -y lxqt tigervnc-standalone-server dbus-x11 openbox nodejs git curl wget
 git clone https://github.com/novnc/noVNC.git
 vncpasswd
 vncserver :1
