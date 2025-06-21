@@ -13,6 +13,11 @@ export DISPLAY=:1
 exec startlxqt
 EOF
 chmod +x ~/.vnc/xstartup
-wget -O run_vnc.sh https://raw.githubusercontent.com/GNDFR/Debian-Packages/refs/heads/main/Run/Run%20VNC%20on%20Debian
+cat > run_vnc.sh << 'EOF'
+vncserver :1
+./utils/novnc_proxy --listen 6080 --vnc localhost:5901 &
+ssh -R 443:localhost:6080 localhost.run
+cd
+EOF
 chmod +x run_vnc.sh
 ./run_vnc.sh
