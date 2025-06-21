@@ -15,3 +15,4 @@ EOF
 chmod +x ~/.vnc/xstartup
 wget -O run_vnc.sh https://raw.githubusercontent.com/GNDFR/Debian-Packages/refs/heads/main/Run/Run%20VNC%20on%20Debian
 chmod +x run_vnc.sh
+./run_vnc.sh
