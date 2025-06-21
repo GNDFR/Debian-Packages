@@ -1,4 +1,0 @@
-vncserver :1
-./utils/novnc_proxy --listen 6080 --vnc localhost:5901 &
-ssh -R 443:localhost:6080 localhost.run
-cd
