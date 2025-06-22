@@ -1,6 +1,10 @@
 sudo apt update
 sudo apt install -y lxqt tigervnc-standalone-server dbus-x11 openbox nodejs git curl
 git clone https://github.com/novnc/noVNC.git
+sudo mkdir -p --mode=0755 /usr/share/keyrings
+curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | sudo tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null
+echo 'deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared any main' | sudo tee /etc/apt/sources.list.d/cloudflared.list
+sudo apt-get update && sudo apt-get install cloudflared
 vncpasswd
 vncserver :1
 vncserver -kill :1
@@ -16,7 +20,6 @@ chmod +x ~/.vnc/xstartup
 cat > run_vnc.sh << 'EOF'
 vncserver :1
 ./utils/novnc_proxy --listen 6080 --vnc localhost:5901 &
-ssh -R 443:localhost:6080 localhost.run
 EOF
 chmod +x run_vnc.sh
 ./run_vnc.sh
