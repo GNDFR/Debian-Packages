@@ -1,5 +1,6 @@
+sudo add-apt-repository ppa:mozillateam/ppa
 sudo apt update
-sudo apt install -y lxqt tigervnc-standalone-server dbus-x11 openbox nodejs git
+sudo apt install -y lxqt tigervnc-standalone-server dbus-x11 openbox nodejs git firefox
 git clone https://github.com/novnc/noVNC.git
 vncserver :1
 vncserver -kill :1
