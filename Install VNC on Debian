@@ -1,6 +1,6 @@
-sudo add-apt-repository ppa:mozillateam/ppa
 sudo apt update
-sudo apt install -y lxqt tigervnc-standalone-server dbus-x11 openbox nodejs git firefox
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+sudo apt install -y lxqt tigervnc-standalone-server dbus-x11 openbox nodejs git ./google-chrome-stable_current_amd64.deb
 git clone https://github.com/novnc/noVNC.git
 vncserver :1
 vncserver -kill :1
