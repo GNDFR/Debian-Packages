@@ -14,7 +14,7 @@ EOF
 chmod +x ~/.vnc/xstartup
 cat > run_vnc.sh << 'EOF'
 vncserver :1
-./noVNC/utils/novnc_proxy --vnc localhost:5901 --listen 8080
+./noVNC/utils/novnc_proxy --vnc localhost:5901 --listen 6080
 EOF
 chmod +x run_vnc.sh
 ./run_vnc.sh
