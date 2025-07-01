@@ -1,5 +1,5 @@
 sudo apt update
-wget https://download.mozilla.org/?product=firefox-latest-ssl&os=linux64&lang=en-US
+curl -fsS https://dl.brave.com/install.sh | sh
 sudo apt install -y lxqt tigervnc-standalone-server dbus-x11 openbox nodejs git
 git clone https://github.com/novnc/noVNC.git
 vncserver :1
