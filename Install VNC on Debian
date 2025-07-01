@@ -1,6 +1,6 @@
 sudo apt update
 wget https://download.mozilla.org/?product=firefox-latest-ssl&os=linux64&lang=en
-sudo apt install -y lxqt tigervnc-standalone-server dbus-x11 openbox nodejs gitb
+sudo apt install -y lxqt tigervnc-standalone-server dbus-x11 openbox nodejs git
 git clone https://github.com/novnc/noVNC.git
 vncserver :1
 vncserver -kill :1
