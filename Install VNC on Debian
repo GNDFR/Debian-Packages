@@ -1,7 +1,7 @@
 sudo apt update
-curl -fsS https://dl.brave.com/install.sh | sh
 sudo apt install -y lxqt tigervnc-standalone-server dbus-x11 openbox nodejs git
 git clone https://github.com/novnc/noVNC.git
+curl -fsS https://dl.brave.com/install.sh | sh
 vncserver :1
 vncserver -kill :1
 cat > ~/.vnc/xstartup <<'EOF'
