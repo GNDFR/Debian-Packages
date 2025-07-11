@@ -1,5 +1,5 @@
 sudo apt update
-sudo apt install -y gnome tigervnc-standalone-server dbus-x11 nodejs git falkon
+sudo apt install -y gnome-session-flashback tigervnc-standalone-server dbus-x11 nodejs git falkon
 git clone https://github.com/novnc/noVNC.git
 vncserver :1
 vncserver -kill :1
@@ -9,7 +9,7 @@ unset SESSION_MANAGER
 unset DBUS_SESSION_BUS_ADDRESS
 export XKL_XMODMAP_DISABLE=1
 export DISPLAY=:1
-exec gnome-session &
+exec gnome-session --session=gnome-classic
 EOF
 chmod +x ~/.vnc/xstartup
 cat > run_vnc.sh << 'EOF'
