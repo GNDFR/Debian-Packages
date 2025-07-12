@@ -9,7 +9,7 @@ unset SESSION_MANAGER
 unset DBUS_SESSION_BUS_ADDRESS
 export XKL_XMODMAP_DISABLE=1
 export DISPLAY=:1
-exec gnome-session --session=gnome-classic
+exec startxfce4
 EOF
 chmod +x ~/.vnc/xstartup
 cat > run_vnc.sh << 'EOF'
