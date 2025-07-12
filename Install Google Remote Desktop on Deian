@@ -3,4 +3,5 @@ sudo apt update
 sudo apt install -y gnome dbus-x11 falkon ./chrome-remote-desktop_current_amd64.deb
 rm chrome-remote-desktop_current_amd64.deb
 echo "exec /usr/bin/gnome-session" > ~/.chrome-remote-desktop-session
+chmod +x ~/.chrome-remote-desktop-session
 echo "Please visit https://remotedesktop.google.com/headless on another computer and copy/paste the command here to complete setup."
