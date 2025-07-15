@@ -7,7 +7,7 @@ Pin: origin packages.mozilla.org
 Pin-Priority: 1000
 ' | sudo tee /etc/apt/preferences.d/mozilla
 sudo apt update
-sudo apt install -y xfce4 tigervnc-standalone-server dbus-x11 nodejs git falkon firefox
+sudo apt install -y xfce4 tigervnc-standalone-server dbus-x11 nodejs git firefox
 git clone https://github.com/novnc/noVNC.git
 vncserver :1
 vncserver -kill :1
